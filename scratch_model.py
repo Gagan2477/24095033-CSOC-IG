@@ -27,24 +27,24 @@ class NeuralNetwork:
         self.b2 = np.zeros((1, 1))
 
     def forward(self, X):
-        self.Z1 = X @ self.W1 + self.b1
+        self.Z1 = X * self.W1 + self.b1
         self.A1 = relu(self.Z1)
-        self.Z2 = self.A1 @ self.W2 + self.b2
+        self.Z2 = self.A1 * self.W2 + self.b2
         self.A2 = sigmoid(self.Z2)
         return self.A2
 
     def backward(self, X, y, learning_rate=0.01):
         m = X.shape[0]
         dZ2 = self.A2 - y
-        dW2 = (self.A1.T @ dZ2) / m
+        dW2 = (self.A1.T * dZ2) / m
         db2 = np.sum(dZ2, axis=0, keepdims=True) / m
 
-        dA1 = dZ2 @ self.W2.T
+        dA1 = dZ2 * self.W2.T
         dZ1 = dA1 * relu_derivative(self.Z1)
-        dW1 = (X.T @ dZ1) / m
+        dW1 = (X.T * dZ1) / m
         db1 = np.sum(dZ1, axis=0, keepdims=True) / m
 
-        # Gradient Descent
+        
         self.W2 -= learning_rate * dW2
         self.b2 -= learning_rate * db2
         self.W1 -= learning_rate * dW1
